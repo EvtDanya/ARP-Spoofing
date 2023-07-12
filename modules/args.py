@@ -10,7 +10,7 @@ class Validation:
     Class for args validation
     '''
     @staticmethod
-    def validate_ip_address(ip_address):
+    def validate_ip_address(ip_address) -> str:
         try:
             ipaddress.ip_address(ip_address) # try to convert str to ip address
             return ip_address
@@ -18,7 +18,7 @@ class Validation:
             logging.error(f'[!] Invalid IP address: {ip_address}')
             raise argparse.ArgumentTypeError(f'Invalid IP address: {ip_address}')
     @staticmethod  
-    def validate_interface(interface_name):
+    def validate_interface(interface_name) -> str:
         interface = next((intrfc for intrfc in get_interfaces() if intrfc['name'] == interface_name), None)
         if not interface:
             logging.error(f'[!] Interface {interface_name} not found!')
@@ -52,7 +52,14 @@ def parse_args() -> argparse.Namespace:
             '-i', '--interface',
             metavar='interface',
             required=True,
+            type=Validation.validate_interface,
             help='interface to use for spoofing'
+        )
+        parser.add_argument( 
+            '-c', '--count',
+            metavar='number',
+            type=int,
+            help='count of packets to sniff'
         )
         parser.add_argument( 
             '-V', '--verbose',

@@ -1,5 +1,5 @@
 import ifaddr
-from scapy.all import ARP, Ether, srp
+from kamene.all import ARP, Ether, srp
 
 def get_interfaces() -> list:
     '''
@@ -20,8 +20,9 @@ def get_mac(target_ip):
     '''
     Get the MAC address of the target
     '''
-    packet = Ether(dst='ff:ff:ff:ff:ff:ff')/ARP(op='who-has', pdst=target_ip)
-    resp, _= srp(packet, timeout=2, retry=10, verbose=False)
-    for _, r in resp:
+    responses, unanswered = srp(Ether(dst="ff:ff:ff:ff:ff:ff") / ARP(pdst=target_ip), timeout=2, retry=10)
+    
+    for s,r in responses:
+        print(type(r[Ether].src))
         return r[Ether].src
     return None

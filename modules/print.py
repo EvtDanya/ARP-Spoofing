@@ -1,6 +1,6 @@
 from colorama import Fore, Style
 
-def print_logo():
+def print_logo() -> None:
     print(Fore.GREEN +
           '    _    ____  ____                           __ _   \n'          
           '   / \  |  _ \|  _ \   ___ _ __   ___   ___  / _(_)_ __   __ _ \n'

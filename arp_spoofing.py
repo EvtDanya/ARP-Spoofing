@@ -8,7 +8,7 @@ import os
 import datetime
 import logging
 
-def start_log():
+def start_log() -> None:
     '''
     Start logging and report errors to log file
     '''
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     print_logo()
     args = parse_args()
     
-    arp = Arp(args.victim, args.gateway, args.interface, args.verbose)
-    arp.run()
+    arp = Arp(args.victim, args.gateway, args.interface, args.count, args.verbose)
+    # arp.run()
     
     
