@@ -16,13 +16,12 @@ def get_interfaces() -> list:
 
     return available_interfaces
 
-def get_mac(target_ip):
+def get_mac(target_ip) -> str:
     '''
     Get the MAC address of the target
     '''
     responses, unanswered = srp(Ether(dst="ff:ff:ff:ff:ff:ff") / ARP(pdst=target_ip), timeout=2, retry=10)
     
     for s,r in responses:
-        print(type(r[Ether].src))
         return r[Ether].src
     return None

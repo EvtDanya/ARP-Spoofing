@@ -22,7 +22,7 @@ if __name__ == '__main__':
     start_log()
     print_logo()
     args = parse_args()
-    
+    print(args.victim, args.gateway, args.interface, args.count, args.verbose)
     arp = Arp(args.victim, args.gateway, args.interface, args.count, args.verbose)
     # arp.run()
     

