@@ -24,6 +24,9 @@ def get_unique_filename() -> str:
 
 class Arp:
     def __init__(self, victim, gateway, interface, count=100, verbose=False) -> None:
+        conf.iface = interface['name']
+        conf.verbose = 0
+        
         self.victim = victim
         self.victim_mac = get_mac(victim)
         if self.victim_mac is None:
@@ -38,12 +41,9 @@ class Arp:
             
         self.interface = interface['name']
         self.verbose = verbose
-        self.count = count
-        self.is_poisoning = True  
+        self.count = count 
         self.filename = get_unique_filename()
         
-        conf.iface = interface['name']
-        conf.verbose = 0
         if self.verbose:
             print(f'Initialized {interface["name"]}:')
             print(f'Gateway ({gateway}) is at {self.gateway_mac}')
