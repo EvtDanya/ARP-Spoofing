@@ -39,14 +39,14 @@ def parse_args() -> argparse.Namespace:
             metavar='victim_ip',
             type=Validation.validate_ip_address,
             required=True,
-            help='ip adress of victim'
+            help='ip address of victim'
         )
         parser.add_argument( 
             '-g', '--gateway',
             metavar='gateway_ip',
             type=Validation.validate_ip_address,
             required=True,
-            help='ip adress of gateway'
+            help='ip address of gateway'
         )
         parser.add_argument( 
             '-i', '--interface',
