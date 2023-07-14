@@ -22,7 +22,9 @@ def get_mac(target_ip) -> str:
     Get the MAC address of the target
     '''
     responses, unanswered = scapy.srp(scapy.Ether(dst="ff:ff:ff:ff:ff:ff") / scapy.ARP(pdst=target_ip), timeout=2, retry=10)
-    
-    for s,r in responses:
-        return r[Ether].src
+    try:    
+        for s,r in responses:
+            return r[Ether].src
+    except:
+        return r.src
     return None
